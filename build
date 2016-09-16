@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+if [ -d "./bundles" ]; then
+    rm -rf ./bundles
+fi
+
+# make out dir
+mkdir ./bundles
+
+# app js
+touch ./bundles/app.min.js
+uglifyjs ./assets/ibm.js \
+       > ./bundles/app.min.js
+
+# app css
+touch ./bundles//app.min.css
+uglifycss --ugly-comments \
+          ./assets/bootstrap.css \
+          ./assets/ibm.css \
+        > ./bundles//app.min.css
+

@@ -1,0 +1,62 @@
+html { font-size: 14px; }
+body { font-family: 'Open Sans', sans-serif; font-size: 100%; color: #CCC; background-color: #333; overflow-x: hidden; }
+
+.jumbotron { background-color: #303030; }
+.jumbotron h1 { margin-bottom: 20px; }
+p.lead { font-weight: 300; font-style: italic; }
+a { color: #FFF; }
+a:hover, a:active, a:focus { color: #EFEFEF; }
+a:visited { color: #EEE;  }
+
+#actions-bar { padding-top: 10px; padding-bottom: 10px; }
+
+#display-box { position: relative; }
+
+#photo-list { text-align: center; } /* css/javascript for masonry display needed */
+#photo-list .photo-wrapper { z-index: 1; height: 200px; width: 200px; overflow: hidden; display: inline-block; position: relative; border: thin solid rgba(255, 255, 255, 0.3); }
+#photo-list .photo-wrapper.active-wrapper { border-color: #FFF; }
+#photo-list .photo-wrapper.wider {}
+#photo-list .photo-wrapper.wider img.photo-item { height: 100%; width: auto; }
+#photo-list .photo-wrapper.taller img.photo-item { width: 100%; height: auto; }
+#photo-list .photo-wrapper img.photo-item { opacity: 0; cursor: pointer; }
+#photo-list .photo-wrapper img.photo-item.loaded { opacity: 1; transition: opacity 1100ms; }
+#photo-list .photo-wrapper span.photo-info { position: absolute; left: 0; right: 0; bottom: 0; background-color: #333; color: #CCC; display: none; }
+#photo-list .photo-wrapper:hover span.photo-info { display: block; padding: 5px 10px; text-align: center; }
+
+.active-container {
+    display: none;
+    position: fixed;
+    top: 10%;
+    width: 90%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 800px;
+    min-height: 400px;
+    color: #333;
+    z-index: 3;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+.active-container a.close-active { cursor: pointer; position: absolute; top: 10px; right: 10px; color: #333; }
+.active-container .active-photo { max-height: 400px; height: 360px; text-align: center; }
+.active-container .active-photo .hi-res { max-width: 100%; max-height: 330px; opacity: 0; }
+.active-container .active-photo .hi-res.loaded { opacity: 1; transition: opacity 1100ms; }
+.active-container .active-info { }
+.active-container .active-info strong { width: 90px; display: inline-block; }
+.active-container .active-controls { position: absolute; bottom: 10px; right: 10px; }
+
+.margin10 { margin-bottom: 10px; }
+.margin20 { margin-bottom: 20px; }
+.margin30 { margin-bottom: 30px; }
+.margin40 { margin-bottom: 40px; }
+.margin50 { margin-bottom: 50px; }
+.margin60 { margin-bottom: 60px; }
+.margin70 { margin-bottom: 70px; }
+.margin80 { margin-bottom: 80px; }
+
+@media only screen and (max-device-width : 580px) {
+    h3 small, h4 small { margin-left: 0; display: block; }
+}
