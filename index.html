@@ -27,21 +27,17 @@
                     <div class="row">
                         <div class="col-sm-6 margin10">
                             <div class="form-group">
-                                <select class="form-control" id="stream-filters">
-                                    <option value="-1" selected="selected">Filter</option>
+                                <select class="form-control" id="stream-sorts">
+                                    <option value="-1" data-attribute="index" data-sort="asc" selected="selected">Sort</option>
+                                    <option value="0" data-attribute="views" data-sort="desc">Most Popular</option>
+                                    <option value="1" data-attribute="views" data-sort="asc">Least Popular</option>
+                                    <option value="2" data-attribute="dateTaken" data-sort="desc">Newest</option>
+                                    <option value="3" data-attribute="dateTaken" data-sort="asc">Oldest</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-6 margin10">
-                            <div class="form-group">
-                                <select class="form-control" id="stream-sorts">
-                                    <option value="-1" selected="selected">Sort</option>
-                                    <option value="views" data-sort="desc">Most Popular</option>
-                                    <option value="views" data-sort="asc">Least Popular</option>
-                                    <option value="dateTaken" data-sort="desc">Newest</option>
-                                    <option value="dateTaken" data-sort="asc">Oldest</option>
-                                </select>
-                            </div>
+                            <button class="btn btn-block btn-danger" id="reset-stream">Reset Filters</button>
                         </div>
                     </div>
                 </div>

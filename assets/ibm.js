@@ -55,12 +55,13 @@ ibm = {
         this.getPhotos();
         this.streamControls();
 
-
-
-
         $$('.cycle-photo').forEach(function (el) {
             el.on('click', function () {
-                var maxIndex = $$('.photo-wrapper').length - 1;
+                var visibleElements = $$('.photo-wrapper').filter(function (el) {
+                    return !el.classList.contains('stream-hidden');
+                });
+
+                var maxIndex = visibleElements.length - 1;
                 var currentIndex = parseInt($('.active-controls').dataset.index, 10);
                 var delta = parseInt(this.dataset.delta, 10);
 
@@ -69,6 +70,7 @@ ibm = {
                     nextIndex = maxIndex;
 
                 var nextWrapper = $('.photo-wrapper[data-index="' + nextIndex + '"]');
+                console.log(nextIndex, nextWrapper);
 
                 ibm.makePhotoActive(nextWrapper);
             }, false);
@@ -112,9 +114,6 @@ ibm = {
     // for each photo object in the collection add image properties as data-* attributes to the wrapper
     // so we can sort/filter later
     attachPhotosToDom: function (photoCollection) {
-        var totalPhotos = photoCollection.length;
-        var photosLoaded = 0;
-
         var photoListEl = $('#photo-list');
         photoCollection.forEach(function (p, index) {
             var wrapper = ibm.createPhotoWrapper(p, index);
@@ -132,10 +131,6 @@ ibm = {
                 else {
                     wrapper.classList.add('taller');
                 }
-
-                if (++photosLoaded === totalPhotos) {
-
-                }
             };
 
             wrapper.appendChild(img);
@@ -147,11 +142,7 @@ ibm = {
         ibm.photoListeners();
     },
 
-    /**
-     * Create photo wrapper from flickr api data
-     * @param photo
-     * @returns {HTMLElement}
-     */
+    // this method should only be called when the photos are loaded the first time, see comment below for details
     createPhotoWrapper: function (photo, index) {
         var wrapper = document.createElement('div');
         wrapper.classList.add('photo-wrapper');
@@ -159,24 +150,15 @@ ibm = {
         wrapper.dataset.title = photo.title;
         wrapper.dataset.views = photo.views;
         wrapper.dataset.id = photo.id;
-        wrapper.dataset.index = index;
+        wrapper.dataset.dateTaken = photo.dateTaken.split(' ')[0];
 
-        if (photo.hasOwnProperty('dateTaken') && typeof photo.dateTaken === 'string') {
-            wrapper.dataset.dateTaken = photo.dateTaken.split(' ')[0];
-        }
-        else {
-            console.log('why u has no date taken?');
-        }
+        // add index twice so we can restore index and still cycle through
+        // the images in order in the lightbox
+        wrapper.dataset.index = wrapper.dataset.initIndex = index;
 
         return wrapper;
-
     },
 
-    /**
-     * Create photo title element
-     * @param title
-     * @returns {HTMLElement}
-     */
     createPhotoTitle: function (title) {
         var el = document.createElement('span');
         el.classList.add('photo-info');
@@ -196,6 +178,7 @@ ibm = {
     },
 
     makePhotoActive: function (wrapper) {
+        if (wrapper === void 0) { return console.log('bah'); }
         var activeContainer = $('#active-container');
 
         ibm.utils.removeClassAll('active-wrapper');
@@ -224,16 +207,87 @@ ibm = {
         $('#stream-search').on('click', function () {
             var searchBar = $('#search-term');
             var term = searchBar.value;
-            console.log(term);
-        }, false);
 
-        $('#stream-filters').on('change', function () {
-            console.log(this.value);
+            ibm.filterPhotosByTitle(term);
         }, false);
 
         $('#stream-sorts').on('change', function () {
-            console.log(this.value);
+            var option = this.querySelector('[value="' + this.value + '"]');
+            ibm.sortPhotos(option.dataset.attribute, option.dataset.sort);
+
         }, false);
+
+        $('#reset-stream').on('click', function () {
+            ibm.utils.removeClassAll('stream-hidden');
+            ibm.sortPhotos('index', 'asc');
+        });
+    },
+
+    getPhotoList: function () {
+        return $$('.photo-wrapper').map(function (p) {
+            return {
+                id: p.dataset.id,
+                url: p.dataset.url,
+                title: p.dataset.title,
+                dateTaken: p.dataset.dateTaken,
+                views: p.dataset.views,
+                index: p.dataset.initIndex,
+                el: p
+            };
+        });
+    },
+
+    sortPhotos: function (attribute, sortDir) {
+        var list = this.getPhotoList();
+
+        var sorted = null;
+        // should be able to make this much more scable by plugging attribute in (a[attribute])
+        if (attribute === 'dateTaken') {
+            sorted = list.sort(function (a, b) {
+                var aMS = Date.parse(a.dateTaken);
+                var bMS = Date.parse(b.dateTaken);
+                if (sortDir === 'asc')
+                    return aMS - bMS;
+                else
+                    return bMS - aMS;
+            });
+        }
+        else {
+            sorted = list.sort(function (a, b) {
+                if (sortDir === 'asc')
+                    return a[attribute] - b[attribute];
+                else
+                    return b[attribute] - a[attribute];
+            });
+        }
+
+        this.appendFilteredPhotos(sorted);
+
+    },
+
+    filterPhotosByTitle: function (searchText) {
+        var regex = new RegExp(searchText, 'gi');
+
+        var photoList = this.getPhotoList();
+        var visibleIndex = 0;
+        photoList.forEach(function (p) {
+            if (!regex.test(p.title)) {
+                p.el.classList.add('stream-hidden');
+                p.el.dataset.index = '';
+            }
+            else {
+                p.el.dataset.index = visibleIndex++;
+            }
+        });
+    },
+
+    appendFilteredPhotos: function (photoArray) {
+        var photoListEl = $('#photo-list');
+        photoListEl.innerHTML = '';
+        photoArray.forEach(function (p, index) {
+            p.el.dataset.index = index;
+            photoListEl.appendChild(p.el);
+        });
     },
 
     // check stream container width, if it's smaller than 400px we need to resize the photos
@@ -253,34 +307,6 @@ ibm = {
 };
 
 ibm.utils = {
-    promise: function (endpoint, options) {
-        if (options === void 0) {
-            options = { success: noop, error: noop, data: {}, method: 'GET' };
-        }
-
-        var method = options.method || 'GET';
-
-        return new Promise(function (resolve, reject) {
-            var req = new XMLHttpRequest();
-            req.open(method, endpoint);
-
-            req.onload = function () {
-                if (req.status == 200) {
-                    resolve(req.response);
-                }
-                else {
-                    reject(Error(req.statusText));
-                }
-            };
-            req.onerror = function () {
-                reject(Error("Something went wrong ... "));
-            };
-
-            var data = ibm.utils.toQueryString(options.data) || '';
-            req.send(data);
-        });
-    },
-
     // IE doesn't support promises because of course not
     get: function (endpoint, options) {
         if (options === void 0) {
