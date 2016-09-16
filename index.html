@@ -5,9 +5,9 @@
 
         <title>NASA Flickr Stream</title>
 
-        <link rel="stylesheet" href="assets/bootstrap.css"/>
-        <link rel="stylesheet" href="assets/ibm.css"/>
-        <!--<link rel="stylesheet" href="bundles/app.min.css" />-->
+        <!--<link rel="stylesheet" href="assets/bootstrap.css"/>-->
+        <!--<link rel="stylesheet" href="assets/ibm.css"/>-->
+        <link rel="stylesheet" href="bundles/app.min.css" />
     </head>
     <body>
         <section class="container-fluid margin30" id="actions-bar">
@@ -75,26 +75,18 @@
             </div>
             <a class="close-active" id="close-active">&times;</a>
         </div>
-        <!--<div class="modal fade" id="active-modal" tabindex="-1" role="dialog">-->
-            <!--<div class="modal-dialog" role="document">-->
-                <!--<div class="modal-content">-->
-                    <!--<div class="modal-header">-->
-                        <!--<button type="button" class="close-modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
-                        <!--<h4 class="modal-title">Active Photo</h4>-->
-                    <!--</div>-->
-                    <!--<div class="modal-body">-->
-                        <!--<div class="row">-->
-                            <!--<div class="col-md-8">-->
-                                <!--<div id="active-photo-container"></div>-->
-                            <!--</div>-->
-                            <!--<div class="col-md-4"></div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
 
-        <script src="assets/ibm.js"></script>
-        <!--<script src="bundles/app.min.js"></script>-->
+        <!--<script src="assets/ibm.js"></script>-->
+        <script src="bundles/app.min.js"></script>
+
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-71817356-3', 'auto');
+            ga('send', 'pageview');
+        </script>
     </body>
 </html>

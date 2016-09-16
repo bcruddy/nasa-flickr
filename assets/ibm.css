@@ -12,7 +12,7 @@ a:visited { color: #EEE;  }
 
 #display-box { position: relative; }
 
-#photo-list { text-align: center; } /* css/javascript for masonry display needed */
+#photo-list { text-align: center; }
 #photo-list .photo-wrapper { z-index: 1; height: 200px; width: 200px; overflow: hidden; display: inline-block; position: relative; border: thin solid rgba(255, 255, 255, 0.3); }
 #photo-list .photo-wrapper.stream-hidden { display: none; }
 #photo-list .photo-wrapper.active-wrapper { border-color: #FFF; }
