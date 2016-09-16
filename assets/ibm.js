@@ -70,7 +70,6 @@ ibm = {
                     nextIndex = maxIndex;
 
                 var nextWrapper = $('.photo-wrapper[data-index="' + nextIndex + '"]');
-                console.log(nextIndex, nextWrapper);
 
                 ibm.makePhotoActive(nextWrapper);
             }, false);
@@ -178,7 +177,7 @@ ibm = {
     },
 
     makePhotoActive: function (wrapper) {
-        if (wrapper === void 0) { return console.log('bah'); }
+        if (wrapper === void 0) { return; }
         var activeContainer = $('#active-container');
 
         ibm.utils.removeClassAll('active-wrapper');
