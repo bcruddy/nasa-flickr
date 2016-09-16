@@ -13,7 +13,7 @@ uglifyjs ./assets/ibm.js \
        > ./bundles/app.min.js
 
 # app css
-touch ./bundles//app.min.css
+touch ./bundles/app.min.css
 uglifycss --ugly-comments \
           ./assets/bootstrap.css \
           ./assets/ibm.css \
