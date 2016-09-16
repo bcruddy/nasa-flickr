@@ -208,18 +208,26 @@ ibm = {
             var term = searchBar.value;
 
             ibm.filterPhotosByTitle(term);
+            $('#reset-stream').style.display = 'block';
+        }, false);
+
+        $('#search-term').on('keypress', function (e) {
+            var keyCode = e.which || e.keyCode;
+            if (parseInt(keyCode) === 13) {
+                ibm.filterPhotosByTitle(this.value);
+                $('#reset-stream').style.display = 'block';
+            }
         }, false);
 
         $('#stream-sorts').on('change', function () {
             var option = this.querySelector('[value="' + this.value + '"]');
             ibm.sortPhotos(option.dataset.attribute, option.dataset.sort);
-
+            $('#reset-stream').style.display = 'block';
         }, false);
 
         $('#reset-stream').on('click', function () {
-            ibm.utils.removeClassAll('stream-hidden');
-            ibm.sortPhotos('index', 'asc');
-        });
+            ibm.resetStream();
+        }, false);
     },
 
     getPhotoList: function () {
@@ -261,10 +269,11 @@ ibm = {
         }
 
         this.appendFilteredPhotos(sorted);
-
     },
 
     filterPhotosByTitle: function (searchText) {
+        ibm.resetStream(true);
+
         var regex = new RegExp(searchText, 'gi');
 
         var photoList = this.getPhotoList();
@@ -287,6 +296,16 @@ ibm = {
             p.el.dataset.index = index;
             photoListEl.appendChild(p.el);
         });
+    },
+
+    resetStream: function (preserveTerm) {
+        ibm.utils.removeClassAll('stream-hidden');
+        ibm.sortPhotos('index', 'asc');
+
+        $('#reset-stream').style.display = 'none';
+        $('#stream-sorts').value = -1;
+        if (!preserveTerm)
+            $('#search-term').value = '';
     },
 
     // check stream container width, if it's smaller than 400px we need to resize the photos

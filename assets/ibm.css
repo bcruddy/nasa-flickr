@@ -9,6 +9,7 @@ a:hover, a:active, a:focus { color: #EFEFEF; }
 a:visited { color: #EEE;  }
 
 #actions-bar { padding-top: 10px; padding-bottom: 10px; }
+#reset-stream { display: none; }
 
 #display-box { position: relative; }
 
