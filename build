@@ -17,5 +17,5 @@ touch ./bundles/app.min.css
 uglifycss --ugly-comments \
           ./assets/bootstrap.css \
           ./assets/ibm.css \
-        > ./bundles//app.min.css
+        > ./bundles/app.min.css
 

@@ -32,6 +32,7 @@ function $$(selector) {
 function noop() {}
 
 HTMLElement.prototype.on = HTMLElement.prototype.addEventListener;
+HTMLElement.prototype.find = HTMLElement.prototype.querySelector;
 
 var ibm = window.ibm || {};
 ibm = {
@@ -61,13 +62,12 @@ ibm = {
                     return !el.classList.contains('stream-hidden');
                 });
 
-                var maxIndex = visibleElements.length - 1;
                 var currentIndex = parseInt($('.active-controls').dataset.index, 10);
                 var delta = parseInt(this.dataset.delta, 10);
 
-                var nextIndex = (currentIndex + delta) % maxIndex;
+                var nextIndex = (currentIndex + delta) % visibleElements.length;
                 if (nextIndex < 0)
-                    nextIndex = maxIndex;
+                    nextIndex = visibleElements.length - 1;
 
                 var nextWrapper = $('.photo-wrapper[data-index="' + nextIndex + '"]');
 
@@ -161,14 +161,14 @@ ibm = {
     createPhotoTitle: function (title) {
         var el = document.createElement('span');
         el.classList.add('photo-info');
-        el.innerText = title;
+        el.textContent = title;
 
         return el;
     },
 
     photoListeners: function () {
         $$('.photo-wrapper').forEach(function (wrapper) {
-            var img = wrapper.querySelector('img.photo-item');
+            var img = wrapper.find('img.photo-item');
 
             img.on('click', function () {
                 ibm.makePhotoActive(wrapper);
@@ -183,6 +183,14 @@ ibm = {
         ibm.utils.removeClassAll('active-wrapper');
         wrapper.classList.add('active-wrapper');
 
+        var activePhoto = activeContainer.find('#active-photo');
+
+        activeContainer.find('#title').textContent = wrapper.dataset.title;
+        activeContainer.find('#date-taken').textContent = wrapper.dataset.dateTaken;
+        activeContainer.find('#views').textContent = wrapper.dataset.views;
+        activeContainer.style.display = 'block';
+        activeContainer.find('.active-controls').dataset.index = wrapper.dataset.index;
+
         var hiRes = new Image();
         hiRes.classList.add('hi-res');
         hiRes.src = wrapper.dataset.url;
@@ -191,15 +199,6 @@ ibm = {
             activePhoto.appendChild(hiRes);
             hiRes.classList.add('loaded');
         };
-
-        var activePhoto = activeContainer.querySelector('#active-photo');
-
-        activeContainer.querySelector('#title').textContent = wrapper.dataset.title;
-        activeContainer.querySelector('#date-taken').textContent = wrapper.dataset.dateTaken;
-        activeContainer.querySelector('#views').textContent = wrapper.dataset.views;
-        activeContainer.style.display = 'block';
-
-        activeContainer.querySelector('.active-controls').dataset.index = wrapper.dataset.index;
     },
 
     streamControls: function () {
@@ -220,7 +219,7 @@ ibm = {
         }, false);
 
         $('#stream-sorts').on('change', function () {
-            var option = this.querySelector('[value="' + this.value + '"]');
+            var option = this.find('[value="' + this.value + '"]');
             ibm.sortPhotos(option.dataset.attribute, option.dataset.sort);
             $('#reset-stream').style.display = 'block';
         }, false);
@@ -317,8 +316,7 @@ ibm = {
         if (rectData.width < 400) {
             var newEdgeLength = (rectData.width * 0.5) + 'px';
             $$('.photo-wrapper').forEach(function (wrap) {
-                wrap.style.width = newEdgeLength;
-                wrap.style.height = newEdgeLength;
+                wrap.style.width = wrap.style.height = newEdgeLength;
             });
         }
     }
@@ -335,7 +333,7 @@ ibm.utils = {
         req.open('GET', endpoint);
 
         req.onload = function () {
-            if (req.status == 200) {
+            if (req.status < 400) {
                 options.success(req.response);
             }
             else {
@@ -360,7 +358,7 @@ ibm.utils = {
             var val = obj[key];
 
             if (!qs.length) {
-                qs += encodeURIComponent(key) + '=' +  encodeURIComponent(val); //key + '=' + val;
+                qs += encodeURIComponent(key) + '=' +  encodeURIComponent(val);
             }
             else {
                 qs += '&' + encodeURIComponent(key) + '=' +  encodeURIComponent(val);

@@ -1,8 +1,6 @@
 html { font-size: 14px; }
 body { font-family: 'Open Sans', sans-serif; font-size: 100%; color: #CCC; background-color: #333; overflow-x: hidden; }
 
-.jumbotron { background-color: #303030; }
-.jumbotron h1 { margin-bottom: 20px; }
 p.lead { font-weight: 300; font-style: italic; }
 a { color: #FFF; }
 a:hover, a:active, a:focus { color: #EFEFEF; }
@@ -36,6 +34,7 @@ a:visited { color: #EEE;  }
     margin-right: auto;
     max-width: 800px;
     min-height: 400px;
+    /*max-height: 80%;*/
     color: #333;
     z-index: 3;
     background-color: rgba(255, 255, 255, 0.9);
@@ -60,5 +59,4 @@ a:visited { color: #EEE;  }
 .margin80 { margin-bottom: 80px; }
 
 @media only screen and (max-device-width : 580px) {
-    h3 small, h4 small { margin-left: 0; display: block; }
 }
