@@ -187,7 +187,7 @@ ibm = {
 
         activeContainer.find('#title').textContent = wrapper.dataset.title;
         activeContainer.find('#date-taken').textContent = wrapper.dataset.dateTaken;
-        activeContainer.find('#views').textContent = wrapper.dataset.views;
+        activeContainer.find('#views').textContent = parseInt(wrapper.dataset.views).toLocaleString();
         activeContainer.style.display = 'block';
         activeContainer.find('.active-controls').dataset.index = wrapper.dataset.index;
 
